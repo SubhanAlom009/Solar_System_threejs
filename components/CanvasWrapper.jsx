@@ -5,6 +5,9 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import * as THREE from "three";
 import { setupSolarSystem } from "./solarSystem";
 import ControlsPanel from "./ControlsPanel";
+import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
+import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
+import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPass.js";
 
 export default function CanvasWrapper() {
   const mountRef = useRef(null);
@@ -42,6 +45,17 @@ export default function CanvasWrapper() {
     renderer.setPixelRatio(window.devicePixelRatio);
     mountRef.current.appendChild(renderer.domElement);
 
+    const renderScene = new RenderPass(scene, camera);
+    const bloomPass = new UnrealBloomPass(
+      new THREE.Vector2(window.innerWidth, window.innerHeight),
+      1.5, // strength
+      0.4, // radius
+      0.85 // threshold
+    );
+    const composer = new EffectComposer(renderer);
+    composer.addPass(renderScene);
+    composer.addPass(bloomPass);
+
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
@@ -59,6 +73,7 @@ export default function CanvasWrapper() {
 
       if (!pausedRef.current) {
         solarSystem.sun.rotation.y += 0.5 * delta;
+        solarSystem.starField.rotation.y += 0.0002;
 
         solarSystem.planets.forEach((planet) => {
           const speed = speedsRef.current[planet.name];
@@ -69,7 +84,7 @@ export default function CanvasWrapper() {
       }
 
       controls.update();
-      renderer.render(scene, camera);
+      composer.render();
     };
 
     animate();
