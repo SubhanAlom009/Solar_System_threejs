@@ -98,10 +98,10 @@ export default function CanvasWrapper() {
 
   return (
     <div className="relative w-screen h-screen overflow-hidden">
-      {/* Three.js Canvas Layer - will be on the bottom */}
+      {/* Three.js Canvas Layer*/}
       <div ref={mountRef} className="absolute top-0 left-0 w-full h-full z-0" />
 
-      {/* UI Layer - will be on top */}
+      {/* UI Layer */}
       <ControlsPanel
         speeds={planetSpeeds}
         setSpeeds={setPlanetSpeeds}

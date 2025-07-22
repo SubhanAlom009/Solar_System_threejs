@@ -151,7 +151,7 @@ export function setupSolarSystem(scene) {
   const starGeometry = new THREE.SphereGeometry(300, 64, 64);
   const starMaterial = new THREE.MeshBasicMaterial({
     map: starTexture,
-    side: THREE.BackSide, // show inside surface
+    side: THREE.BackSide,
   });
   const starField = new THREE.Mesh(starGeometry, starMaterial);
   scene.add(starField);
