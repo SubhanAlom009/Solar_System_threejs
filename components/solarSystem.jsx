@@ -67,6 +67,8 @@ export function setupSolarSystem(scene) {
       size: 1.0,
       speed: 0.0035,
       texture: "/textures/2k_saturn.jpg",
+      ringTexture: "/textures/8k_saturn_ring_alpha.png",
+      hasRing: true,
     },
     {
       name: "Uranus",
@@ -85,13 +87,31 @@ export function setupSolarSystem(scene) {
   ];
 
   const planets = planetsConfig.map((planet) => {
-    const texture = new THREE.TextureLoader().load(planet.texture);
+    const texture = loader.load(planet.texture);
     const geometry = new THREE.SphereGeometry(planet.size, 32, 32);
     const material = new THREE.MeshStandardMaterial({
       color: planet.color,
       map: texture,
     });
     const mesh = new THREE.Mesh(geometry, material);
+
+    if (planet.hasRing) {
+      const ringGeometry = new THREE.RingGeometry(
+        planet.size * 1.3,
+        planet.size * 1.5,
+        128
+      );
+      const ringMaterial = new THREE.MeshBasicMaterial({
+        map: loader.load(planet.ringTexture),
+        side: THREE.DoubleSide,
+        // transparent: true,
+      });
+      const ringMesh = new THREE.Mesh(ringGeometry, ringMaterial);
+      ringMesh.rotation.x = Math.PI / 2.5;
+
+      mesh.add(ringMesh);
+    }
+
     scene.add(mesh);
 
     return {

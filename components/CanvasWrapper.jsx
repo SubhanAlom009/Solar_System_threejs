@@ -78,6 +78,7 @@ export default function CanvasWrapper() {
         solarSystem.planets.forEach((planet) => {
           const speed = speedsRef.current[planet.name];
           planet.angle += speed * delta * 60;
+          planet.mesh.rotation.y += 0.1 * delta;
           planet.mesh.position.x = planet.radius * Math.cos(planet.angle);
           planet.mesh.position.z = planet.radius * Math.sin(planet.angle);
         });
